@@ -1,27 +1,31 @@
 import { useState } from "react";
+
 import axios from "axios";
 
 import { API_BASE_URL } from "../config";
 
-function ComplaintForm({ fetchComplaints, setAiResult }) {
+function ComplaintForm({
+    fetchComplaints,
+    setAiResult
+}) {
 
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        title: "",
-        description: "",
-        category: "",
-        location: ""
-    });
+    const [name, setName] =
+        useState("");
 
-    const handleChange = (e) => {
+    const [email, setEmail] =
+        useState("");
 
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+    const [title, setTitle] =
+        useState("");
 
-    };
+    const [description, setDescription] =
+        useState("");
+
+    const [category, setCategory] =
+        useState("");
+
+    const [location, setLocation] =
+        useState("");
 
     const handleSubmit = async (e) => {
 
@@ -29,43 +33,43 @@ function ComplaintForm({ fetchComplaints, setAiResult }) {
 
         try {
 
-            await axios.post(
-                `${API_BASE_URL}/api/complaints`,
-                formData
+            const response =
+                await axios.post(
+
+                    `${API_BASE_URL}/api/complaints`,
+
+                    {
+                        name,
+                        email,
+                        title,
+                        description,
+                        category,
+                        location
+                    }
+
+                );
+
+            setAiResult(
+                "Complaint submitted successfully"
             );
-
-            const aiResponse = await axios.post(
-                `${API_BASE_URL}/api/ai/analyze`,
-                {
-                    complaint: formData.description
-                }
-            );
-
-           console.log(aiResponse.data);
-
-setAiResult(
-    aiResponse.data.choices?.[0]?.message?.content ||
-    "No AI response received"
-);
 
             fetchComplaints();
 
-            alert("Complaint Submitted");
-
-            setFormData({
-                name: "",
-                email: "",
-                title: "",
-                description: "",
-                category: "",
-                location: ""
-            });
+            setName("");
+            setEmail("");
+            setTitle("");
+            setDescription("");
+            setCategory("");
+            setLocation("");
 
         } catch (error) {
 
             console.log(error);
 
-            alert("Error submitting complaint");
+            alert(
+                error.response?.data?.error ||
+                "Error submitting complaint"
+            );
 
         }
 
@@ -81,59 +85,65 @@ setAiResult(
 
                 <input
                     type="text"
-                    name="name"
                     placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
+                    value={name}
+                    onChange={(e) =>
+                        setName(e.target.value)
+                    }
                 />
 
                 <br /><br />
 
                 <input
                     type="email"
-                    name="email"
                     placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    value={email}
+                    onChange={(e) =>
+                        setEmail(e.target.value)
+                    }
                 />
 
                 <br /><br />
 
                 <input
                     type="text"
-                    name="title"
                     placeholder="Complaint Title"
-                    value={formData.title}
-                    onChange={handleChange}
+                    value={title}
+                    onChange={(e) =>
+                        setTitle(e.target.value)
+                    }
                 />
 
                 <br /><br />
 
                 <textarea
-                    name="description"
-                    placeholder="Complaint Description"
-                    value={formData.description}
-                    onChange={handleChange}
+                    placeholder="Description"
+                    value={description}
+                    onChange={(e) =>
+                        setDescription(e.target.value)
+                    }
                 />
 
                 <br /><br />
 
                 <input
                     type="text"
-                    name="category"
                     placeholder="Category"
-                    value={formData.category}
-                    onChange={handleChange}
+                    value={category}
+                    onChange={(e) =>
+                        setCategory(e.target.value)
+                    }
                 />
 
                 <br /><br />
 
                 <input
                     type="text"
-                    name="location"
                     placeholder="Location"
-                    value={formData.location}
-                    onChange={handleChange}
+                    value={location}
+                    onChange={(e) =>
+                        setLocation(e.target.value)
+                    }
                 />
 
                 <br /><br />

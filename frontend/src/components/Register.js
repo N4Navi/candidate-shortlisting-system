@@ -6,27 +6,14 @@ import { API_BASE_URL } from "../config";
 
 function Register() {
 
-    const [formData, setFormData] =
-        useState({
+    const [name, setName] =
+        useState("");
 
-            name: "",
-            email: "",
-            password: ""
+    const [email, setEmail] =
+        useState("");
 
-        });
-
-    const handleChange = (e) => {
-
-        setFormData({
-
-            ...formData,
-
-            [e.target.name]:
-                e.target.value
-
-        });
-
-    };
+    const [password, setPassword] =
+        useState("");
 
     const handleSubmit = async (e) => {
 
@@ -39,17 +26,28 @@ function Register() {
 
                     `${API_BASE_URL}/api/auth/register`,
 
-                    formData
+                    {
+                        name,
+                        email,
+                        password
+                    }
 
                 );
 
             alert(response.data.message);
 
+            setName("");
+            setEmail("");
+            setPassword("");
+
         } catch (error) {
 
             console.log(error);
 
-            alert("Registration failed");
+            alert(
+                error.response?.data?.error ||
+                "Registration failed"
+            );
 
         }
 
@@ -65,27 +63,33 @@ function Register() {
 
                 <input
                     type="text"
-                    name="name"
                     placeholder="Name"
-                    onChange={handleChange}
+                    value={name}
+                    onChange={(e) =>
+                        setName(e.target.value)
+                    }
                 />
 
                 <br /><br />
 
                 <input
                     type="email"
-                    name="email"
                     placeholder="Email"
-                    onChange={handleChange}
+                    value={email}
+                    onChange={(e) =>
+                        setEmail(e.target.value)
+                    }
                 />
 
                 <br /><br />
 
                 <input
                     type="password"
-                    name="password"
                     placeholder="Password"
-                    onChange={handleChange}
+                    value={password}
+                    onChange={(e) =>
+                        setPassword(e.target.value)
+                    }
                 />
 
                 <br /><br />

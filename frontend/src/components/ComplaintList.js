@@ -43,6 +43,36 @@ function ComplaintList({
     }
 
 };
+const handleDelete = async (id) => {
+
+    try {
+
+        const token =
+            localStorage.getItem("token");
+
+        await axios.delete(
+
+            `${API_BASE_URL}/api/complaints/${id}`,
+
+            {
+                headers: {
+                    Authorization: token
+                }
+            }
+
+        );
+
+        fetchComplaints();
+
+    } catch (error) {
+
+        console.log(error);
+
+        alert("Failed to delete complaint");
+
+    }
+
+};
 
     return (
 
@@ -119,6 +149,11 @@ function ComplaintList({
                         >
                             Resolved
                         </button>
+                        <button
+  onClick={() => handleDelete(complaint._id)}
+>
+  Delete
+</button>
 
                     </div>
 

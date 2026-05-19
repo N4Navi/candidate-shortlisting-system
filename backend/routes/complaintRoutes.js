@@ -66,7 +66,33 @@ async (req, res) => {
     }
 
 });
+router.delete(
+    "/:id",
+    authMiddleware,
 
+    async (req, res) => {
+
+        try {
+
+            await Complaint.findByIdAndDelete(
+                req.params.id
+            );
+
+            res.json({
+                message:
+                "Complaint deleted successfully"
+            });
+
+        } catch (error) {
+
+            res.status(500).json({
+                error: error.message
+            });
+
+        }
+
+    }
+);
 router.get("/search", async (req, res) => {
 
     try {
