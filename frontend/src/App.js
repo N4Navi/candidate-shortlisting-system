@@ -1,31 +1,70 @@
-import CandidateForm from "./components/CandidateForm";
-import CandidateList from "./components/CandidateList";
-import JobForm from "./components/JobForm";
-import AIShortlist from "./components/AIShortlist";
+import { useEffect, useState } from "react";
+
+import axios from "axios";
+
+import ComplaintForm from "./components/ComplaintForm";
+import ComplaintList from "./components/ComplaintList";
+import AIAnalysis from "./components/AIAnalysis";
+
+import { API_BASE_URL } from "./config";
 
 function App() {
 
-  return (
-    <div style={{ padding: "20px" }}>
+    const [complaints, setComplaints] = useState([]);
 
-      <h1>Candidate Shortlisting System</h1>
+    const [aiResult, setAiResult] = useState("");
 
-      <CandidateForm />
+    const fetchComplaints = async () => {
 
-      <hr />
+        try {
 
-      <CandidateList />
+            const response = await axios.get(
+                `${API_BASE_URL}/api/complaints`
+            );
 
-      <hr />
+            setComplaints(response.data);
 
-      <JobForm />
+        } catch (error) {
 
-      <hr />
+            console.log(error);
 
-      <AIShortlist />
+        }
 
-    </div>
-  );
+    };
+
+    useEffect(() => {
+
+        fetchComplaints();
+
+    }, []);
+
+    return (
+
+        <div style={{ padding: "20px" }}>
+
+            <h1>
+                Smart Complaint Management System
+            </h1>
+
+            <ComplaintForm
+                fetchComplaints={fetchComplaints}
+                setAiResult={setAiResult}
+            />
+
+            <hr />
+
+            <AIAnalysis aiResult={aiResult} />
+
+            <hr />
+
+           <ComplaintList
+    complaints={complaints}
+    fetchComplaints={fetchComplaints}
+/>
+
+        </div>
+
+    );
 
 }
 

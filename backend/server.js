@@ -8,9 +8,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/candidates", require("./routes/candidateRoutes"));
-app.use("/api/match", require("./routes/matchRoutes"));
-app.use("/api/ai", require("./routes/aiRoutes"));
+const complaintRoutes = require("./routes/complaintRoutes");
+app.use("/api/complaints", complaintRoutes);
+const aiRoutes = require("./routes/aiRoutes");
+app.use("/api/ai", aiRoutes);
+const authRoutes =
+    require("./routes/authRoutes");
+    app.use("/api/auth", authRoutes);
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
 .catch(err => console.log(err));

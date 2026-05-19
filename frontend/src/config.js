@@ -1,2 +1,2 @@
 export const API_BASE_URL =
-  "https://candidate-shortlisting-backend-xgk1.onrender.com";
+  "http://localhost:5000";
