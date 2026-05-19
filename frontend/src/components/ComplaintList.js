@@ -9,29 +9,40 @@ function ComplaintList({
 
     const updateStatus = async (id, status) => {
 
-        try {
+    try {
 
-            await axios.put(
+        const token =
+            localStorage.getItem("token");
 
-                `${API_BASE_URL}/api/complaints/${id}`,
+        await axios.put(
 
-                {
-                    status: status
+            `${API_BASE_URL}/api/complaints/${id}`,
+
+            {
+                status: status
+            },
+
+            {
+                headers: {
+
+                    Authorization: token
+
                 }
+            }
 
-            );
+        );
 
-            fetchComplaints();
+        fetchComplaints();
 
-        } catch (error) {
+    } catch (error) {
 
-            console.log(error);
+        console.log(error);
 
-            alert("Failed to update status");
+        alert("Failed to update status");
 
-        }
+    }
 
-    };
+};
 
     return (
 

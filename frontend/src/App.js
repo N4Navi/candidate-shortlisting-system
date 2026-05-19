@@ -1,3 +1,5 @@
+import Register from "./components/Register";
+import Login from "./components/Login";
 import { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -13,7 +15,8 @@ function App() {
     const [complaints, setComplaints] = useState([]);
 
     const [aiResult, setAiResult] = useState("");
-
+const token =
+    localStorage.getItem("token");
     const fetchComplaints = async () => {
 
         try {
@@ -40,31 +43,75 @@ function App() {
 
     return (
 
-        <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px" }}>
 
-            <h1>
-                Smart Complaint Management System
-            </h1>
+        <h1>
+            Smart Complaint Management System
+        </h1>
 
-            <ComplaintForm
-                fetchComplaints={fetchComplaints}
-                setAiResult={setAiResult}
-            />
+        {
 
-            <hr />
+            !token ? (
 
-            <AIAnalysis aiResult={aiResult} />
+                <>
 
-            <hr />
+                    <Register />
 
-           <ComplaintList
-    complaints={complaints}
-    fetchComplaints={fetchComplaints}
-/>
+                    <hr />
 
-        </div>
+                    <Login />
 
-    );
+                </>
+
+            ) : (
+
+                <>
+
+                    <button
+
+                        onClick={() => {
+
+                            localStorage.removeItem("token");
+
+                            window.location.reload();
+
+                        }}
+
+                    >
+
+                        Logout
+
+                    </button>
+
+                    <hr />
+
+                    <ComplaintForm
+                        fetchComplaints={fetchComplaints}
+                        setAiResult={setAiResult}
+                    />
+
+                    <hr />
+
+                    <AIAnalysis
+                        aiResult={aiResult}
+                    />
+
+                    <hr />
+
+                    <ComplaintList
+                        complaints={complaints}
+                        fetchComplaints={fetchComplaints}
+                    />
+
+                </>
+
+            )
+
+        }
+
+    </div>
+
+);
 
 }
 
