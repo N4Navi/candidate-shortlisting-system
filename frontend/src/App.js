@@ -12,24 +12,65 @@ import { API_BASE_URL } from "./config";
 
 function App() {
 
-    const [complaints, setComplaints] = useState([]);
+    const [location, setLocation] =
+        useState("");
 
-    const [aiResult, setAiResult] = useState("");
-const token =
-    localStorage.getItem("token");
+    const [category, setCategory] =
+        useState("");
+
+    const [complaints, setComplaints] =
+        useState([]);
+
+    const [aiResult, setAiResult] =
+        useState("");
+
+    const token =
+        localStorage.getItem("token");
+
     const fetchComplaints = async () => {
 
         try {
 
-            const response = await axios.get(
-                `${API_BASE_URL}/api/complaints`
-            );
+            const response =
+                await axios.get(
+                    `${API_BASE_URL}/api/complaints`
+                );
 
             setComplaints(response.data);
 
         } catch (error) {
 
             console.log(error);
+
+        }
+
+    };
+
+    const searchComplaints = async () => {
+
+        try {
+
+            const response =
+                await axios.get(
+
+                    `${API_BASE_URL}/api/complaints/search`,
+
+                    {
+                        params: {
+                            location,
+                            category
+                        }
+                    }
+
+                );
+
+            setComplaints(response.data);
+
+        } catch (error) {
+
+            console.log(error);
+
+            alert("Search failed");
 
         }
 
@@ -43,75 +84,107 @@ const token =
 
     return (
 
-    <div style={{ padding: "20px" }}>
+        <div style={{ padding: "20px" }}>
 
-        <h1>
-            Smart Complaint Management System
-        </h1>
+            <h1>
+                Smart Complaint Management System
+            </h1>
 
-        {
+            {
 
-            !token ? (
+                !token ? (
 
-                <>
+                    <>
 
-                    <Register />
+                        <Register />
 
-                    <hr />
+                        <hr />
 
-                    <Login />
+                        <Login />
 
-                </>
+                    </>
 
-            ) : (
+                ) : (
 
-                <>
+                    <>
 
-                    <button
+                        <button
 
-                        onClick={() => {
+                            onClick={() => {
 
-                            localStorage.removeItem("token");
+                                localStorage.removeItem("token");
 
-                            window.location.reload();
+                                window.location.reload();
 
-                        }}
+                            }}
 
-                    >
+                        >
 
-                        Logout
+                            Logout
 
-                    </button>
+                        </button>
 
-                    <hr />
+                        <hr />
 
-                    <ComplaintForm
-                        fetchComplaints={fetchComplaints}
-                        setAiResult={setAiResult}
-                    />
+                        <ComplaintForm
+                            fetchComplaints={fetchComplaints}
+                            setAiResult={setAiResult}
+                        />
 
-                    <hr />
+                        <hr />
 
-                    <AIAnalysis
-                        aiResult={aiResult}
-                    />
+                        <AIAnalysis
+                            aiResult={aiResult}
+                        />
 
-                    <hr />
+                        <hr />
 
-                    <ComplaintList
-                        complaints={complaints}
-                        fetchComplaints={fetchComplaints}
-                    />
+                        <h2>Search Complaints</h2>
 
-                </>
+                        <input
+                            type="text"
+                            placeholder="Search by location"
+                            value={location}
+                            onChange={(e) =>
+                                setLocation(e.target.value)
+                            }
+                        />
 
-            )
+                        <br /><br />
 
-        }
+                        <input
+                            type="text"
+                            placeholder="Filter by category"
+                            value={category}
+                            onChange={(e) =>
+                                setCategory(e.target.value)
+                            }
+                        />
 
-    </div>
+                        <br /><br />
 
-);
+                        <button
+                            onClick={searchComplaints}
+                        >
+                            Search
+                        </button>
+
+                        <hr />
+
+                        <ComplaintList
+                            complaints={complaints}
+                            fetchComplaints={fetchComplaints}
+                        />
+
+                    </>
+
+                )
+
+            }
+
+        </div>
+
+    );
 
 }
 

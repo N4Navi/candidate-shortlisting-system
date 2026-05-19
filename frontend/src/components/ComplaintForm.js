@@ -33,27 +33,42 @@ function ComplaintForm({
 
         try {
 
-            const response =
+            await axios.post(
+
+                `${API_BASE_URL}/api/complaints`,
+
+                {
+                    name,
+                    email,
+                    title,
+                    description,
+                    category,
+                    location
+                }
+
+            );
+
+            const aiResponse =
                 await axios.post(
 
-                    `${API_BASE_URL}/api/complaints`,
+                    `${API_BASE_URL}/api/ai/analyze`,
 
                     {
-                        name,
-                        email,
-                        title,
-                        description,
                         category,
-                        location
+                        description
                     }
 
                 );
 
             setAiResult(
-                "Complaint submitted successfully"
+                aiResponse.data
             );
 
             fetchComplaints();
+
+            alert(
+                "Complaint submitted successfully"
+            );
 
             setName("");
             setEmail("");
@@ -67,8 +82,11 @@ function ComplaintForm({
             console.log(error);
 
             alert(
+
                 error.response?.data?.error ||
+
                 "Error submitting complaint"
+
             );
 
         }

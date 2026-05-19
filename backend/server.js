@@ -11,13 +11,14 @@ const complaintRoutes =
 
 const authRoutes =
     require("./routes/authRoutes");
-
+const aiRoutes =
+require("./routes/aiRoutes");
 const app = express();
 
 app.use(cors());
 
 app.use(express.json());
-
+app.use("/api/ai", aiRoutes);
 mongoose.connect(process.env.MONGO_URI)
 
 .then(() => {

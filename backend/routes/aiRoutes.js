@@ -1,59 +1,57 @@
 const express = require("express");
-const router = express.Router();
 
-const axios = require("axios");
+const router = express.Router();
 
 router.post("/analyze", async (req, res) => {
 
     try {
 
-        const { complaint } = req.body;
+        const {
+            category,
+            description
+        } = req.body;
 
-        const response = await axios.post(
+        let priority = "Low";
+        let department = "General Department";
 
-            "https://openrouter.ai/api/v1/chat/completions",
+        if (
+            category.toLowerCase().includes("water")
+        ) {
+            priority = "Medium";
+            department = "Water Department";
+        }
 
-            {
-                model: "openai/gpt-oss-120b:free",
+        if (
+            category.toLowerCase().includes("electricity")
+        ) {
+            priority = "High";
+            department = "Electricity Department";
+        }
 
-                messages: [
-                    {
-                        role: "user",
+        if (
+            category.toLowerCase().includes("garbage")
+        ) {
+            priority = "Medium";
+            department = "Sanitation Department";
+        }
 
-                        content: `
-Analyze this complaint:
+        const summary =
+            description.slice(0, 80);
 
-"${complaint}"
+        const response =
+            "Your complaint has been registered successfully and forwarded to the concerned department.";
 
-Return:
-1. Urgency
-2. Department
-3. Short Summary
-4. Auto-response
-`
-                    }
-                ]
-            },
-
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${process.env.OPENROUTER_API_KEY}`,
-
-                    "Content-Type": "application/json"
-                }
-            }
-
-        );
-
-        res.json(response.data);
+        res.json({
+            priority,
+            department,
+            summary,
+            response
+        });
 
     } catch (error) {
 
-        console.log(error.response?.data || error.message);
-
         res.status(500).json({
-            error: "AI analysis failed"
+            error: error.message
         });
 
     }
